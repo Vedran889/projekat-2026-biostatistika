@@ -173,7 +173,7 @@ shapiro.test(idi$Fixed2011)
 
 # Call datasets from ggplot2 and read help (Slides pp. 81–82, 92)
 ggplot2::mpg
-?mpg
+?mpg # Get more information on the data
 ggplot2::diamonds
 ?diamonds
 
