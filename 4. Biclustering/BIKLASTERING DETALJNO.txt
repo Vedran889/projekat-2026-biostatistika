@@ -1,0 +1,805 @@
+1. Klastering — klasična ideja
+
+Klastering grupiše objekte tako da su slični jedni drugima unutar iste grupe, a različiti od objekata u drugim grupama.
+
+Primjeri:
+
+grupisanje pacijenata prema simptomima
+
+grupisanje dokumenata prema temama
+
+grupisanje slika prema vizuelnim karakteristikama
+
+Važno:
+Klastering obično radi nad cijelim skupom osobina (features).
+➡️ dakle, svaki objekat se posmatra kroz isti skup varijabli.
+
+✅ 2. Biklastering — šta je nova ideja?
+
+Biklastering (biclustering) istovremeno grupiše:
+
+podskup redova (npr. pacijenata, gena, dokumenata)
+i
+
+podskup kolona (npr. simptoma, uslova, riječi)
+
+u lokalne obrasce.
+
+Drugim riječima:
+➡️ pronalazi grupe objekata koje se ponašaju slično samo u određenom podskupu osobina, a ne nužno u svim.
+
+Zato se biklastering često naziva i:
+
+ko-klastering
+
+dvo-dimensionalno klasterisanje
+
+lokalno klasterisanje
+
+📌 Praktična razlika:
+Klastering	Biklastering
+Grupisanje redova ili kolona, ali odvojeno.	Grupisanje redova i kolona istovremeno.
+Klaster važi za sve feature-e.	Klaster važi samo za podskup feature-a.
+Pretpostavlja globalne obrasce.	Otkriva lokalne obrasce, čak i ako globalno ne postoje.
+🔬 Primjer (geni × uslovi):
+
+Matrice u bioinformatiki (gene expression):
+
+Geni	Uslovi 1–100
+
+Globalni klastering bi grupisao gene prema sličnosti preko svih 100 uslova.
+➡️ ali geni često imaju korelaciju samo u nekim uslovima.
+
+Biklastering nalazi:
+
+podskup gena
+
+podskup uslova
+koji zajedno pokazuju jasan obrazac (npr. ko-ekspresija samo u upalnim uslovima).
+
+✅ 3. Matematika iza biklasteringa
+3.1. Matrica podataka
+
+Imamo matricu
+
+𝑋
+∈
+𝑅
+𝑚
+×
+𝑛
+X∈R
+m×n
+
+gdje su redovi objekti, kolone osobine.
+
+Biklaster 
+𝐵
+B je definisan kao:
+
+𝐵
+=
+(
+𝐼
+,
+𝐽
+)
+B=(I,J)
+
+gdje je 
+𝐼
+⊆
+{
+1
+,
+…
+,
+𝑚
+}
+I⊆{1,…,m} skup redova,
+a 
+𝐽
+⊆
+{
+1
+,
+…
+,
+𝑛
+}
+J⊆{1,…,n} skup kolona.
+
+3.2. Cilj biklasteringa
+
+Pronaći parove 
+(
+𝐼
+,
+𝐽
+)
+(I,J) takve da su elementi u bloku 
+𝑋
+𝐼
+,
+𝐽
+X
+I,J
+	​
+
+ homogeni prema nekom kriterijumu, npr.:
+
+približno konstantni
+
+ko-variraju (additivno ili multiplikativno)
+
+imaju malu grešku aproksimacije
+
+imaju nisku entropiju
+
+imaju malu varijansu
+
+Zavisno od metode.
+
+3.3. Tipični matematički modeli za biklastare
+A) Konstanta / homogenost
+
+Maksimizira se:
+
+homogenost
+(
+𝐼
+,
+𝐽
+)
+=
+−
+∑
+𝑖
+∈
+𝐼
+∑
+𝑗
+∈
+𝐽
+(
+𝑋
+𝑖
+𝑗
+−
+𝜇
+𝐼
+,
+𝐽
+)
+2
+homogenost(I,J)=−
+i∈I
+∑
+	​
+
+j∈J
+∑
+	​
+
+(X
+ij
+	​
+
+−μ
+I,J
+	​
+
+)
+2
+
+klasična χ² greška.
+
+B) Additivni model
+
+Pretpostavlja:
+
+𝑋
+𝑖
+𝑗
+≈
+𝛼
+𝑖
++
+𝛽
+𝑗
++
+𝜃
+X
+ij
+	​
+
+≈α
+i
+	​
+
++β
+j
+	​
+
++θ
+
+traži se podskup gdje greška:
+
+∑
+𝑖
+∈
+𝐼
+∑
+𝑗
+∈
+𝐽
+(
+𝑋
+𝑖
+𝑗
+−
+𝛼
+𝑖
+−
+𝛽
+𝑗
+−
+𝜃
+)
+2
+i∈I
+∑
+	​
+
+j∈J
+∑
+	​
+
+(X
+ij
+	​
+
+−α
+i
+	​
+
+−β
+j
+	​
+
+−θ)
+2
+
+bude minimalna.
+
+C) Multiplikativni model
+𝑋
+𝑖
+𝑗
+≈
+𝛼
+𝑖
+⋅
+𝛽
+𝑗
+X
+ij
+	​
+
+≈α
+i
+	​
+
+⋅β
+j
+	​
+
+D) Stohastički modeli / Informaciona teorija
+
+Optimizuje se:
+
+KL-divergencija
+
+zajednička entropija
+
+mutual information
+
+npr. Coclustering algoritmi.
+
+E) Matrice niske dimenzije
+
+Biklaster predstavlja nisku-rang podmatricu:
+
+𝑋
+𝐼
+,
+𝐽
+≈
+𝑢
+𝑣
+𝑇
+X
+I,J
+	​
+
+≈uv
+T
+
+gdje se minimizuje:
+
+∥
+𝑋
+𝐼
+,
+𝐽
+−
+𝑢
+𝑣
+𝑇
+∥
+𝐹
+∥X
+I,J
+	​
+
+−uv
+T
+∥
+F
+	​
+
+
+Ovo je povezano sa SVD/NNMF formulacijama.
+
+✅ 4. Zašto se biklastering koristi?
+
+otkriva skrivene lokalne obrasce
+
+ne zahtijeva da se sve osobine ponašaju isto
+
+koristi se u biologiji, medicini, tekst analizi, marketingu, preporučivačima, itd.
+
+✨ Kratko poređenje u jednoj rečenici
+
+Klastering traži globalne grupe u cijelim podacima,
+dok biklastering pronalazi lokalne grupe koje važe samo za odabrane podskupove osobina i objekata.
+
+Ako želiš, mogu ti dati i:
+
+✅ primjere algoritama za biklastering
+(Plaid, Cheng & Church, Spectral biclustering, SAMBA…)
+
+✅ vizuelne primjere matrica
+
+✅ matematičku izvedbu nekog specifičnog modela
+
+Samo reci!
+
+You said:
+meni treba detaljna matematika iza biklasteinga (plain text)
+ChatGPT said:
+
+U redu — u nastavku dobijaš detaljnu, čistu, matematičku formulaciju biklasteringa u plain text formatu, bez formatiranja koje bi smetalo kopiranju.
+
+======================================================================
+DETALJNA MATEMATIKA IZA BIKLASTERINGA (PLAIN TEXT)
+
+Matrica podataka
+
+Polazimo od realne matrice:
+
+X je matrica dimenzija m × n.
+Redovi predstavljaju objekte, kolone predstavljaju osobine.
+
+Element X(i,j) označava vrijednost j-te osobine za i-ti objekat.
+
+Definicija biklastra
+
+Biklaster je par podskupova:
+
+I ⊆ {1,...,m}
+J ⊆ {1,...,n}
+
+Podmatrica X(I,J) je dio matrice definisan redovima I i kolonama J.
+
+Cilj je pronaći par (I,J) takav da elementi u X(I,J) zadovoljavaju određeni model homogenosti ili ko-varijacije.
+
+Opšti optimizacioni problem
+
+Biklastering se može formulirati kao optimizacioni problem:
+
+max_{I,J} Score( X(I,J) )
+
+ili ekvivalentno:
+
+min_{I,J} Error( X(I,J) )
+
+gdje Score ili Error zavisi od matematičkog modela koji želimo.
+
+Tipovi matematičkih modela
+
+U literaturi se najčešće koriste četiri osnovna modela:
+
+A) Konstanta
+B) Additivni model
+C) Multiplikativni model
+D) Model niskog ranga
+
+Sada ide detaljna matematika za svaki.
+
+======================================================================
+A) MODEL 1: KONSTANTNI BIKLASTER
+
+Pretpostavka:
+Svi elementi blok X(I,J) približno jednaki jednoj konstanti μ.
+
+Matematički model:
+X(i,j) = μ + ε(i,j)
+
+gdje je ε(i,j) greška.
+
+μ se računa kao aritmetička sredina u bloku:
+
+μ = (1 / (|I| * |J|)) * Σ_{i∈I} Σ_{j∈J} X(i,j)
+
+Cilj: minimizirati varijansu unutar bloka.
+
+Error(I,J) = Σ_{i∈I} Σ_{j∈J} ( X(i,j) - μ )^2
+
+Biklaster je dobar ako ovaj Error(I,J) bude mali.
+
+Ovo je najjednostavniji model, koristi se u algoritmu Cheng–Church.
+
+======================================================================
+B) MODEL 2: ADDITIVNI BIKLASTER
+
+Pretpostavka:
+X(i,j) se može aproksimirati zbirom efekta reda i efekta kolone.
+
+Model:
+X(i,j) = α(i) + β(j) + θ + ε(i,j)
+
+α(i) je efekat reda i
+
+β(j) je efekat kolone j
+
+θ je globalna konstanta
+
+ε(i,j) je greška
+
+Cilj:
+min_{I,J, α,β,θ} Σ_{i∈I} Σ_{j∈J} ( X(i,j) - α(i) - β(j) - θ )^2
+
+Optimalne vrijednosti dobijaju se normalnim jednačinama.
+
+Za θ:
+
+θ = μ(I,J) - μ_row(I,J) - μ_col(I,J)
+
+gdje su:
+μ(I,J) srednja vrijednost u bloku
+μ_row(i) prosjek reda i u bloku
+μ_col(j) prosjek kolone j u bloku
+
+Note: zbog simetrije, koristi se centriranje:
+
+X'(i,j) = X(i,j) - μ_row(i) - μ_col(j) + μ
+
+Additivni model otkriva situacije gdje se redovi pomjeraju međusobno konstantno.
+
+======================================================================
+C) MODEL 3: MULTIPLIKATIVNI BIKLASTER
+
+Pretpostavka:
+Elementi se skaliraju po redovima i kolonama.
+
+Model:
+X(i,j) = α(i) * β(j) + ε(i,j)
+
+Cilj:
+min_{I,J, α,β} Σ_{i∈I} Σ_{j∈J} ( X(i,j) - α(i) β(j) )^2
+
+Ovo je problem ranga-1 faktorizacije nad podmatricom.
+
+Za dati skup I,J, α(i) i β(j) se mogu dobiti iterativno metodom najmanjih kvadrata:
+
+β(j) = ( Σ_{i∈I} α(i) X(i,j) ) / ( Σ_{i∈I} α(i)^2 )
+α(i) = ( Σ_{j∈J} β(j) X(i,j) ) / ( Σ_{j∈J} β(j)^2 )
+
+Ovaj model otkriva obrasce koji su proporcionalni između redova i kolona.
+
+======================================================================
+D) MODEL 4: NISKO-RANG (SVD / MATRICA RANGA 1)
+
+Generalizacija multiplicativnog modela:
+
+Pretpostavka:
+Podmatrica X(I,J) se može aproksimirati matricom niskog ranga.
+
+Najjednostavniji (rang 1):
+
+X(i,j) ≈ u(i) * v(j)
+
+Cilj:
+min || X(I,J) - u * v^T ||_F
+
+gdje je || · ||_F Frobeniusova norma.
+
+Optimalno rješenje:
+Ako se I,J znaju unaprijed, onda u i v daju prva singularna vrijednost i vektori SVD-a podmatrice X(I,J).
+
+Ali pošto su I,J nepoznati:
+Biklastering = traženje podmatrice koja maksimizira prvu singularnu vrijednost.
+
+Formalni problem:
+max_{I,J} σ1( X(I,J) )
+
+gdje je σ1 najveća singularna vrijednost podmatrice.
+
+Ovo je teško (NP-hard), pa se koriste heuristike.
+
+======================================================================
+E) MODEL 5: INFORMACIONO-TEORIJSKI (CO-CLUSTERING)
+
+Pogodno za diskretne ili probabilističke podatke.
+
+Pretpostavka:
+P(X) je distribucija nad matricom.
+
+Cilj: minimizirati Kullback–Leibler divergenciju između originalne distribucije i aproksimacije klasterisanom strukturom.
+
+Formalno:
+
+min KL( P(X) || Q(Z_r, Z_c) )
+
+gdje su Z_r i Z_c oznake za klastere redova i kolona.
+
+Q je model koji pretpostavlja da su elementi u istoj kombinaciji klastera "blokovi" u probabilističkoj matrici.
+
+Ovo je osnova za "Dhillon spectral co-clustering".
+
+======================================================================
+F) BIJKLASTERI KAO OPTIMIZACIJA KOMBINATORNE STRUKTURE
+
+Biklastering takođe može biti formuliran kao problem pronalaženja podmatrice maksimalne težine.
+
+Za binarne matrice:
+Biklaster(I,J) = Σ_{i∈I} Σ_{j∈J} X(i,j)
+
+Problem:
+Pronaći najveću submatricu sa velikim brojem jedinica.
+
+Ovo se svodi na:
+
+maximum edge biclique problem
+
+densely connected subgraph
+
+NP-hard optimizacione probleme.
+
+Zbog toga većina praktičnih algoritama koristi heuristike ili relaksacije.
+
+======================================================================
+G) KRITERIJUMI ZA PROSUDU KVALITETA BIKLASTERA
+
+Najčešće metričke funkcije:
+
+Mean Squared Residue (MSR):
+MSR(I,J) = (1/(|I||J|)) Σ_{i∈I} Σ_{j∈J} ( X(i,j) - μ - μ_row(i) - μ_col(j) )^2
+
+Variance score:
+Var(I,J) = Σ_{i∈I} Σ_{j∈J} (X(i,j) - μ)^2
+
+Entropy:
+H(I,J) = - Σ p(x) log p(x)
+
+Spectral density:
+σ1(X(I,J)) preko SVD-a.
+
+Likelihood score:
+L(I,J) = Σ log P(X(i,j) | parametri)
+
+Svaki algoritam bira svoje.
+
+======================================================================
+H) OPTIMIZACIONI PROBLEM (FORMALNO)
+
+Generalni matematički problem biklasteringa:
+
+max_{I⊆{1..m}, J⊆{1..n}} F( X(I,J) )
+
+F može biti:
+
+negativna varijansa
+
+SVD singularna vrijednost
+
+zbijenost (density)
+
+minimalni MSR
+
+najveća vjerovatnoća
+
+entropija
+
+Pošto je broj mogućih parova (I,J) = 2^(m+n), problem je NP-težak.
+
+Zbog toga se koriste:
+
+iterativno poboljšanje
+
+gradijentne metode
+
+spektalni grafovi
+
+heuristike
+
+grube aproksimacije
+
+======================================================================
+
+======================================================================
+CHENG–CHURCH BICLUSTERING (DETALJNO IZVOĐENJE)
+
+Algoritam Cheng–Church (2000) zasniva se na ideji da je “dobar” biklaster onaj u kojem su elementi bloka additivno koherentni — tj. da razlike od sredine reda i kolone osciliraju minimalno.
+
+To se kvantifikuje preko Mean Squared Residue (MSR).
+
+Polazimo od matrice
+
+X je matrica dimenzija m × n.
+
+Biklaster je podmatrica određena sa I ⊆ {1..m}, J ⊆ {1..n}.
+
+Označimo:
+
+k = |I|
+l = |J|
+
+tj. broj redova i kolona biklastra.
+
+Definicije srednjih vrijednosti u bloku
+
+Row mean:
+μ_i = (1/l) * Σ_{j ∈ J} X(i,j)
+
+Column mean:
+μ_j = (1/k) * Σ_{i ∈ I} X(i,j)
+
+Block mean:
+μ = (1/(k*l)) * Σ_{i ∈ I} Σ_{j ∈ J} X(i,j)
+
+Reziduum (residue) elementa u bloku
+
+Residue r(i,j) definisan je kao:
+
+r(i,j) = X(i,j) - μ_i - μ_j + μ
+
+Ideja:
+Ako je biklaster additivno koherentan, onda su odstupanja mala.
+
+Četiri veličine se ponašaju kao ANOVA dekompozicija:
+
+μ_i = prosjek reda
+
+μ_j = prosjek kolone
+
+μ = prosjek cijelog bloka
+
+Ako je X(i,j) ≈ μ_i + μ_j - μ, onda je r(i,j) ≈ 0.
+
+Mean Squared Residue (MSR)
+
+MSR(I,J) = (1/(k*l)) * Σ_{i ∈ I} Σ_{j ∈ J} [ r(i,j) ]^2
+
+Ovo je glavna funkcija koju Cheng–Church minimizira.
+
+IZVODJENJE FORMULE ZA MSR
+
+Počinjemo od:
+
+r(i,j) = X(i,j) - μ_i - μ_j + μ
+
+Kvadriramo:
+
+r(i,j)^2 = (X(i,j) - μ_i - μ_j + μ)^2
+
+MSR = (1/(k*l)) * Σ r(i,j)^2
+
+Da bismo vidjeli zašto se koristi baš ova forma, posmatramo da su optimalni μ_i i μ_j oni koji minimiziraju sumu kvadrata reziduala.
+
+Krenemo od funkcije:
+
+E = Σ_{i∈I} Σ_{j∈J} (X(i,j) - μ_i - μ_j + μ)^2
+
+Tražimo parcijalne izvode:
+
+∂E / ∂μ_i = 0
+∂E / ∂μ_j = 0
+∂E / ∂μ = 0
+
+Time dobijamo rješenja:
+
+μ_i = (1/l) Σ_{j∈J} X(i,j)
+μ_j = (1/k) Σ_{i∈I} X(i,j)
+μ = (1/(k*l)) Σ X(i,j)
+
+Dakle, definicije srednjih vrijednosti nisu proizvoljne — one se dobijaju rješavanjem optimizacije.
+
+Ovo je razlog zašto je MSR prirodni kriterijum.
+
+Uklanjanje reda / kolone – kriterijum
+
+Algoritam iterativno uklanja redove i kolone koji kvare koherenciju bloka.
+
+Jedna od ključnih formula je:
+
+Row residue score:
+
+H_i = (1/l) Σ_{j∈J} r(i,j)^2
+
+Column residue score:
+
+H_j = (1/k) Σ_{i∈I} r(i,j)^2
+
+Ako:
+
+H_i > δ → red i se izbacuje
+
+H_j > δ → kolona j se izbacuje
+
+gdje je δ zadati prag (threshold).
+
+Logika:
+Ako jedan red ima veći MSR od dozvoljenog, on kvari koherenciju i izbacuje se iz bloka.
+
+Proces rudarjenja biklastera
+
+Iterativno se ponavlja:
+
+Uzimamo trenutni skup I i J.
+
+Računamo MSR(I,J).
+
+Ako je MSR ≤ δ, prihvatamo biklaster.
+
+Inače:
+
+uklanjamo red ili kolonu sa najvećim residue score (H_i ili H_j).
+
+Nastavljamo dok MSR ne padne ispod praga.
+
+“Maskiranje” i pronalaženje drugih biklastera
+
+Kad se jedan biklaster otkrije, njegovi elementi se zamijene „maskom“, najčešće:
+
+X(i,j) ← X(i,j) + α
+
+gdje je α velika vrijednost da bi se taj blok uništio kao kandidat u narednom ciklusu.
+
+Potom se proces ponavlja u ostatku matrice.
+
+Zašto radi?
+
+MSR kriterijum je ekvivalentan modelu:
+
+X(i,j) ≈ μ_i + μ_j - μ
+
+što znači da su redovi koherentni (razlikuju se samo po pomjeraju) i kolone koherentne (također samo po pomjeraju).
+
+Ako postoji “latentni signal”, on se detektuje kroz male rezidue.
+
+Završna matematička interpretacija
+
+Cheng–Church biklastering = minimizacija:
+
+MSR(I,J) = (1/(|I||J|)) Σ (X(i,j) - μ_i - μ_j + μ)^2
+
+pod ograničenjem da:
+
+I i J mogu biti adaptivno reducirani dok MSR ne padne ispod željenog praga.
+
+Optimalne μ_i, μ_j i μ nastaju rješavanjem parcijalnih izvoda funkcije E, što pokazuje da je CC algoritam direktno zasnovan na kvadratnoj optimizaciji.
+
+======================================================================
+
