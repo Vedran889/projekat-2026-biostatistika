@@ -1,5 +1,5 @@
 Ovo je projektni zadatak iz predmeta Biostatistika. 
-Kroz zadatke su obrađeni sljedeće oblasti: 
+Kroz zadatke su obrađene sljedeće oblasti: 
 - *Lasso* i *Ridge* regresija,
 - statistički testovi,
 - klasterovanje,
